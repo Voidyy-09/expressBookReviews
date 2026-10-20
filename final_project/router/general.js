@@ -55,12 +55,9 @@ public_users.get("/isbn/:isbn", function (req, res) {
 // ---------------------------------------------------------------
 public_users.get("/author/:author", function (req, res) {
   const author = req.params.author;
-  const booksByAuthor = [];
-  for (const bookId in books) {
-    if (books[bookId].author === author) {
-      booksByAuthor.push(books[bookId]);
-    }
-  }
+  const booksByAuthor = Object.values(books).filter(
+    (book) => book.author === author
+  );
   if (booksByAuthor.length > 0) {
     return res.json(booksByAuthor);
   } else {
@@ -73,12 +70,9 @@ public_users.get("/author/:author", function (req, res) {
 // ---------------------------------------------------------------
 public_users.get("/title/:title", function (req, res) {
   const title = req.params.title;
-  const booksByTitle = [];
-  for (const bookId in books) {
-    if (books[bookId].title === title) {
-      booksByTitle.push(books[bookId]);
-    }
-  }
+  const booksByTitle = Object.values(books).filter(
+    (book) => book.title === title
+  );
   if (booksByTitle.length > 0) {
     return res.json(booksByTitle);
   } else {
@@ -99,8 +93,7 @@ public_users.get("/review/:isbn", function (req, res) {
 });
 
 // ===============================================================
-// Tasks 10-13: Same functionality using async/await with Axios
-// (these call the synchronous routes above over HTTP)
+// Tasks 10-13: async/await with Axios
 // ===============================================================
 
 // Task 10: Get all books using async/await with Axios
@@ -125,11 +118,11 @@ public_users.get("/async/isbn/:isbn", async function (req, res) {
   }
 });
 
-// Task 12: Get books by author using async/await with Axios
+// Task 12: Get book details by author using async/await with Axios
 public_users.get("/async/author/:author", async function (req, res) {
   try {
     const response = await axios.get(
-      `${BASE_URL}/author/${encodeURIComponent(req.params.author)}`,
+      `${BASE_URL}/author/${encodeURIComponent(req.params.author)}`
     );
     return res.status(200).json(response.data);
   } catch (err) {
@@ -139,11 +132,11 @@ public_users.get("/async/author/:author", async function (req, res) {
   }
 });
 
-// Task 13: Get books by title using async/await with Axios
+// Task 13: Get book details by title using async/await with Axios
 public_users.get("/async/title/:title", async function (req, res) {
   try {
     const response = await axios.get(
-      `${BASE_URL}/title/${encodeURIComponent(req.params.title)}`,
+      `${BASE_URL}/title/${encodeURIComponent(req.params.title)}`
     );
     return res.status(200).json(response.data);
   } catch (err) {
